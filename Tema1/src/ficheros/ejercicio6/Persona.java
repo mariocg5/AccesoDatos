@@ -13,6 +13,7 @@ public class Persona implements Serializable {
 	private StringBuilder apellido1;
 	private StringBuilder apellido2;
 	private Date nacimiento;
+	
 	public StringBuilder getNombre() {
 		return nombre;
 	}

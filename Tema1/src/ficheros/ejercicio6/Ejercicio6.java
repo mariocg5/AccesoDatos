@@ -16,7 +16,7 @@ public class Ejercicio6 {
 
 	public static final String RUTA = System.getProperty("user.dir") + File.separator + "src" + File.separator + "data"
 			+ File.separator; 
-	private static final String DOCTRABAJO_IN = "FicheroPersonasSerializado.dat";
+	public static final String DOCTRABAJO_IN = "FicheroPersonasSerializado.dat";
 	private static Scanner sc = new Scanner(System.in);
 	private static ObjectOutputStream oOS;
 
