@@ -2,32 +2,62 @@
 <Personas>
     <Persona>
         <nombre>a</nombre>
-        <apellido>a</apellido>
+        <apellido1>a</apellido1>
         <apellido2>a</apellido2>
         <nacimiento>Wed Jan 11 00:11:00 CET 1111</nacimiento>
     </Persona>
     <Persona>
         <nombre>b</nombre>
-        <apellido>b</apellido>
+        <apellido1>b</apellido1>
         <apellido2>b</apellido2>
         <nacimiento>Wed Jan 11 00:11:00 CET 1111</nacimiento>
     </Persona>
     <Persona>
         <nombre>c</nombre>
-        <apellido>c</apellido>
+        <apellido1>c</apellido1>
         <apellido2>c</apellido2>
         <nacimiento>Wed Jan 11 00:11:00 CET 1111</nacimiento>
     </Persona>
     <Persona>
         <nombre>d</nombre>
-        <apellido>d</apellido>
+        <apellido1>d</apellido1>
         <apellido2>d</apellido2>
         <nacimiento>Wed Jan 11 00:11:00 CET 1111</nacimiento>
     </Persona>
     <Persona>
         <nombre>e</nombre>
-        <apellido>e</apellido>
+        <apellido1>e</apellido1>
         <apellido2>e</apellido2>
         <nacimiento>Wed Jan 11 00:11:00 CET 1111</nacimiento>
+    </Persona>
+    <Persona>
+        <nombre>Luis</nombre>
+        <apellido1>Perez</apellido1>
+        <apellido2>Perez</apellido2>
+        <nacimiento>Sun Jan 01 00:05:00 CET 1989</nacimiento>
+    </Persona>
+    <Persona>
+        <nombre>Mario</nombre>
+        <apellido1>Cuevas</apellido1>
+        <apellido2>Gonzalez</apellido2>
+        <nacimiento>Mon Jan 05 00:04:00 CET 1998</nacimiento>
+    </Persona>
+    <Persona>
+        <nombre>Angel</nombre>
+        <apellido1>Rosario</apellido1>
+        <apellido2>Federo</apellido2>
+        <nacimiento>Sat Jan 05 00:10:00 CET 2002</nacimiento>
+    </Persona>
+    <Persona>
+        <nombre>Abel </nombre>
+        <apellido1>Blanco</apellido1>
+        <apellido2>Martin</apellido2>
+        <nacimiento>Sun Jan 04 00:06:00 CET 2004</nacimiento>
+    </Persona>
+    <Persona>
+        <nombre>Nacho</nombre>
+        <apellido1>Martinez</apellido1>
+        <apellido2>Perez</apellido2>
+        <nacimiento>Wed Jan 12 00:05:00 CET 2005</nacimiento>
     </Persona>
 </Personas>
