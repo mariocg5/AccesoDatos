@@ -32,6 +32,9 @@ public class Manejador extends DefaultHandler {
 	}
 
 	@Override
+	/**
+	 * Da el contenido de los elementos
+	 */
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		// TODO Auto-generated method stub
 		super.characters(ch, start, length);

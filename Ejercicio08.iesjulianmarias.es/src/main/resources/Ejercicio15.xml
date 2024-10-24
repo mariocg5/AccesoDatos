@@ -1,0 +1,27 @@
+<familia>
+  <miembro nombre="Mario">
+    <PrimerApellido>Cuevas</PrimerApellido>
+    <SegundoApellido>Gonzalez</SegundoApellido>
+    <nacimiento>2002-12-31 23:01:00.0 UTC</nacimiento>
+  </miembro>
+  <miembro nombre="Pepe">
+    <PrimerApellido>popo</PrimerApellido>
+    <SegundoApellido>pipi</SegundoApellido>
+    <nacimiento>2000-12-31 23:01:00.0 UTC</nacimiento>
+  </miembro>
+  <miembro nombre="a">
+    <PrimerApellido>a</PrimerApellido>
+    <SegundoApellido>a</SegundoApellido>
+    <nacimiento>2002-12-31 23:01:00.0 UTC</nacimiento>
+  </miembro>
+  <miembro nombre="b">
+    <PrimerApellido>b</PrimerApellido>
+    <SegundoApellido>b</SegundoApellido>
+    <nacimiento>2032-01-07 23:09:00.0 UTC</nacimiento>
+  </miembro>
+  <miembro nombre="c">
+    <PrimerApellido>c</PrimerApellido>
+    <SegundoApellido>c</SegundoApellido>
+    <nacimiento>2005-12-31 23:01:00.0 UTC</nacimiento>
+  </miembro>
+</familia>
