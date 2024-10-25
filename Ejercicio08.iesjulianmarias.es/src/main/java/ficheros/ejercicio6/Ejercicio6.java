@@ -61,6 +61,10 @@ public class Ejercicio6 {
 		return persona;
 	}
 
+	public static String getDoctrabajoIn() {
+		return DOCTRABAJO_IN;
+	}
+
 	/**
 	 * Escribe un objeto de la clase persona en un stream de salida
 	 * 
@@ -76,6 +80,10 @@ public class Ejercicio6 {
 			System.out.println("Error al escribir el fichero");
 			e.printStackTrace();
 		}
+	}
+
+	public static ObjectOutputStream getoOS() {
+		return oOS;
 	}
 
 	public static void leerObjetos() { // void o persona, preguntar
@@ -105,9 +113,9 @@ public class Ejercicio6 {
 
 	public static void main(String[] args) {
 		inicializar();
-		for (int i = 0; i < 5; i++) {
-			escribirObjeto(obtenerDatos());
-		}
+//		for (int i = 0; i < 5; i++) {
+//			escribirObjeto(obtenerDatos());
+//		}
 		leerObjetos();
 		try {
 			oOS.close();

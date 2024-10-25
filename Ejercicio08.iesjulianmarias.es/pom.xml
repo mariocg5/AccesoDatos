@@ -36,5 +36,19 @@
 			<artifactId>xstream</artifactId>
 			<version>1.4.19</version>
 		</dependency>
+		<!--JAXB Mapear objetos a XML y viceversa-->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>4.0.4</version>
+		</dependency>
 	</dependencies>
+
+	<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+
 </project>
