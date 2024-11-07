@@ -37,7 +37,7 @@ public class Ejercicio9 {
 			wb = new XSSFWorkbook(new FileInputStream(new File(utilidades.RUTA + DOCTRABAJO_IN)));
 			// puntosRecarga();
 			
-			// buscarMarca();
+			buscarMarca();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
