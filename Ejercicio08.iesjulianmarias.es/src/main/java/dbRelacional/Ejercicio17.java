@@ -1,136 +1,194 @@
 package dbRelacional;
-
+ 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Scanner;
 
 import utilidades.utilidades;
-
+ 
 public class Ejercicio17 {
+ 
 	private static Connection conn;
 	private final static String DB = "dBEmpresaSQLite.dat";
-
+	
+ 
 	public Ejercicio17() {
-		// TODO Auto-generated constructor stub
+ 
 	}
-
-	public static void main(String[] args) {
-		establecerConexion_MySQL();
-		// listarDepartamentos();
-		aniadirDatos();
-		listarDepartamentos();
-
-		cerrarConexión();
-
-	}
-
-	/**
-	 * Ejecuta el script "Ejercicio1_MySQL_Ampliacion.sql" en MySQL Workbench. 
-	 * Añade al ejercicio anterior un método que mediante una transacción añada un
-	 * empleado a la tabla empleados. 
-	 * Este método tendrá como parámetros de entrada el nombre y los apellidos del empleado 
-	 * así como el NOMBRE DEL DEPARTAMENTO al que pertenecerá. 
-	 * Ten en cuenta que deberás buscar el id del departamento y que esté podría no existir.
-	 * En ese caso, se informará al usuario, se le mostrará un listado de los nombres de 
-	 * los departamentos existentes y se le darán las siguientes opciones:
-	 * - añadir el nuevo departamento a la base de  datos y asignar el empleado al mismo 
-	 * - asignar al empleado a un departamento existente y mostrar el número de empleados de ese departamento.
-	 * - abortar toda la operación sin añadir ni empleado ni departamento
-	 * 
-	 * Crea otro método que nos diga el número de empleados de la empresa.
-	 * 
-	 * @param nombre
-	 * @param apellido
-	 * @param apellido2
-	 * @param dpto
-	 */
-	// Consulta en la base de datos
-	private static void aniadirEmpleado(String nombre, String apellido, String apellido2, String dpto) {
+ 
+	private static void aniadirEmpleado(String nombre, String apellido, String apellido2, String nombreDepartamento) {
+ 
 		try {
-			PreparedStatement sentenciaAltaEmpleado= conn.prepareStatement("INSERT INTO empleados (`nombre`, `apellido1`, `apellido2`, `departamento`) "
-					+ "VALUES (?, ?, ?, ?);", PreparedStatement.RETURN_GENERATED_KEYS);
-			sentenciaAltaEmpleado.setString(2, nombre);
-			sentenciaAltaEmpleado.setString(3, apellido);
-			sentenciaAltaEmpleado.setString(4, apellido2);
-			sentenciaAltaEmpleado.setString(5, dpto);
-			
-			ResultSet idDptos = sentenciaAltaEmpleado.getGeneratedKeys();
-			idDptos.next();
-			int idDpto = idDptos.getInt(5);
-			
-			
+			conn.setAutoCommit(false);
+			int deptId = buscarIdDepartamento(nombreDepartamento);
+ 
+			if (deptId == -1) { // si no existe el departamento
+				System.out.println("El departamento buscado no existe");
+				listarDepartamentos();
+ 
+				Scanner sc = new Scanner(System.in);
+				System.out.println("Opciones:");
+				System.out.println("1. Añadir un nuevo departamento y asignar el empleado");
+				System.out.println("2. Asignar el empleado a un departamento existente");
+				System.out.println("3. Abortar la operación");
+				System.out.print("Seleccione una opción: ");
+				int opcion = sc.nextInt();
+				sc.nextLine();
+ 
+				switch (opcion) {// Añadir nuevo departamento y asignar empleado
+				case 1:
+					deptId = aniadirDepartamento(nombreDepartamento);
+					if (deptId != -1) {
+						aniadirEmpleados(nombre, apellido, apellido2, deptId);
+						System.out.println("Departamento y empleados añadidos correctamente");
+					} else {
+						System.out.println("El departamento no se pudo añadir correctamente");
+					}
+					break;
+				case 2: // Asignar al empleado a un departamento existente
+					System.out.println("Ingrese el ID de un departamento existente");
+					deptId = sc.nextInt();
+					sc.nextLine();
+					aniadirEmpleados(nombre, apellido, apellido2, deptId);
+					System.out.println("Empleado añadido al departamento");
+					mostrarEmpleados(deptId);
+					break;
+				case 3:
+					System.out.println("Operación abortada");
+					conn.rollback();
+					return;
+ 
+				default:
+					System.out.println("Opción no válida");
+ 
+				}
+ 
+			} else { // El departamento existe, añadir empleado
+				aniadirEmpleados(nombre, apellido, apellido2, deptId);
+				System.out.println("Empleado añadido al departamento");
+				mostrarEmpleados(deptId);
+			}
+ 
+			conn.commit();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 		}
 	}
-
-	private static int borrarDatos(int numDept) {
-		// Forma de comprobar si se eliminan o no los datos con un operador ternario en
-		// el main
+ 
+	private static void mostrarEmpleados(int numDept) {
 		try {
-			PreparedStatement sentencia = conn.prepareStatement("DELETE FROM departamentos WHERE dept_no = ? ;");
+			PreparedStatement sentencia = conn
+					.prepareStatement("SELECT COUNT(*) AS total FROM empresa.empleados WHERE departamento = ?;");
 			sentencia.setInt(1, numDept);
-			return sentencia.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	private static void aniadirDatos() {
-		try {
-			PreparedStatement sentencia = conn
-					.prepareStatement("INSERT INTO departamentos (dnombre, loc) VALUES (?, ?);");
-			sentencia.setString(1, "Mondongo");
-			sentencia.setString(2, "Matanassa");
-			sentencia.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private static void modificarDatos() {
-		try {
-			PreparedStatement sentencia = conn
-					.prepareStatement("UPDATE departamentos SET dnombre = ?, loc = ? " + "WHERE dept_no =?;");
-			sentencia.setString(1, "Deporte");
-			sentencia.setString(2, "Alar");
-			sentencia.setInt(3, 40);
-			sentencia.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private static void listarDepartamentos() {
-		try {
-			PreparedStatement sentencia = conn.prepareStatement("SELECT * FROM departamentos;");
 			ResultSet rs = sentencia.executeQuery();
-			while (rs.next()) {
-				System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3));
+			if (rs.next()) {
+				int total = rs.getInt("total");
+				System.out.println("Número de empleados en el departamento: " + total);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
-	private static void cerrarConexión() {
+ 
+	private static void aniadirEmpleados(String nombre, String apellido1, String apellido2, int numDpto) {
 		try {
-			conn.close();
-			System.out.println("Conexión cerrada");
+			PreparedStatement sentencia = conn.prepareStatement(
+					"INSERT INTO empresa.empleados (nombre, apellido1, apellido2, departamento) VALUES (?, ?, ?, ?);",
+					Statement.RETURN_GENERATED_KEYS);
+			sentencia.setString(1, nombre);
+			sentencia.setString(2, apellido1);
+			sentencia.setString(3, apellido2);
+			sentencia.setInt(4, numDpto);
+			sentencia.executeUpdate();
+ 
+			ResultSet rs = sentencia.getGeneratedKeys();
+			if (rs.next()) {
+				int nuevoIdEmpleado = rs.getInt(1);
+				System.out.println("El empleado tiene un ID: " + nuevoIdEmpleado);
+			} else {
+				System.out.println("Error al generar el ID del nuevo empleado");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+ 
+	private static int aniadirDepartamento(String nombreDepartamento) {
+		try {
+			PreparedStatement sentencia = conn.prepareStatement(
+				"INSERT INTO empresa.departamentos (dnombre, loc) VALUES (?, 'Valladolid')",
+				Statement.RETURN_GENERATED_KEYS
+			);
+			sentencia.setString(1, nombreDepartamento);
+			sentencia.executeUpdate();
+ 
+			ResultSet rs = sentencia.getGeneratedKeys();
+			if (rs.next()) {
+				return rs.getInt(1); 
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	private static int buscarIdDepartamento(String nombreDepartamento) {
+		try {
+			PreparedStatement sentencia = conn.prepareStatement(
+				"SELECT dept_no FROM empresa.departamentos WHERE dnombre = ?"
+			);
+			sentencia.setString(1, nombreDepartamento);
+			ResultSet rs = sentencia.executeQuery();
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+ 
+	public static void main(String[] args) {
+		establecerConexion();
+		aniadirEmpleado("Bacari", "Perez", "Ruiz", "Badminton");
+		cerrarConexión();
+	}
+ 
+	private static void listarDepartamentos() {
+		try {
+			PreparedStatement sentencia = conn.prepareStatement("SELECT * FROM empresa.departamentos;");
+			ResultSet rs = sentencia.executeQuery();
+			while (rs.next()) {
+				System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3));
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+ 
 	}
-
-	private static void establecerConexion_MySQL() {
+ 
+	private static void cerrarConexión() {
+	    try {
+	        if (conn != null) {
+	            conn.close();
+	            System.out.println("Conexión cerrada.");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+ 
+	private static void establecerConexion() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/empresa", "root", "admin");
@@ -142,7 +200,52 @@ public class Ejercicio17 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+ 
 	}
+ 
+	private static void borrarDatos() {
+		try {
+			PreparedStatement sentencia = conn
+					.prepareStatement("DELETE FROM empresa.departamentos WHERE dnombre = ? ;");
+			sentencia.setString(1, "Quejas");
+			sentencia.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+ 
+	private static void aniadirDatos() {
+		try {
+			PreparedStatement sentencia = conn
+					.prepareStatement("INSERT INTO empresa.departamentos (dept_no, dnombre, loc) VALUES (?, ?, ?);");
+			sentencia.setInt(1, 50);
+			sentencia.setString(2, "Quejas");
+			sentencia.setString(3, "Valladolid");
+			sentencia.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ 
+	}
+ 
+	private static void modificarDatos() {
+		try {
+			PreparedStatement sentencia = conn
+					.prepareStatement("UPDATE empresa.departamentos SET dnombre = ?, loc = ? " + "WHERE dept_no =?;");
+			sentencia.setString(1, "Deporte");
+			sentencia.setString(2, "Alar");
+			sentencia.setInt(3, 40);
+			sentencia.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ 
+	}
+ 
+
 
 	private static void establecerConexion_SQLite() {
 		try {
