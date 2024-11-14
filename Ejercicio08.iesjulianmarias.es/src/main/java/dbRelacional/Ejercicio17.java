@@ -23,7 +23,7 @@ public class Ejercicio17 {
 	private static void aniadirEmpleado(String nombre, String apellido, String apellido2, String nombreDepartamento) {
  
 		try {
-			conn.setAutoCommit(false);
+			
 			int deptId = buscarIdDepartamento(nombreDepartamento);
  
 			if (deptId == -1) { // si no existe el departamento
@@ -41,6 +41,7 @@ public class Ejercicio17 {
  
 				switch (opcion) {// Añadir nuevo departamento y asignar empleado
 				case 1:
+					conn.setAutoCommit(false); // uso la transaccion en el caso en el que se realizan dos consultas para que si falla una no se haga ninguna insercion
 					deptId = aniadirDepartamento(nombreDepartamento);
 					if (deptId != -1) {
 						aniadirEmpleados(nombre, apellido, apellido2, deptId);
@@ -48,6 +49,8 @@ public class Ejercicio17 {
 					} else {
 						System.out.println("El departamento no se pudo añadir correctamente");
 					}
+					conn.commit();
+					conn.setAutoCommit(true);
 					break;
 				case 2: // Asignar al empleado a un departamento existente
 					System.out.println("Ingrese el ID de un departamento existente");
@@ -73,7 +76,7 @@ public class Ejercicio17 {
 				mostrarEmpleados(deptId);
 			}
  
-			conn.commit();
+			
 		} catch (SQLException e) {
 			try {
 				conn.rollback();
@@ -154,7 +157,7 @@ public class Ejercicio17 {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1;
+		return -1; //si no existe el departamento devuelve -1
 	}
  
 	public static void main(String[] args) {
